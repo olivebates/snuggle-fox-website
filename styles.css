@@ -713,6 +713,7 @@ a {
     align-items: flex-start;
     position: static;
     top: auto;
+    display: none;
   }
 
   .nav {
