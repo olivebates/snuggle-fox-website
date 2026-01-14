@@ -823,23 +823,6 @@ a {
     flex-wrap: wrap;
   }
 
-  .game-frame:fullscreen,
-  .game-frame:-webkit-full-screen {
-    background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .game-frame:fullscreen iframe,
-  .game-frame:-webkit-full-screen iframe {
-    width: 100%;
-    height: 100%;
-    max-width: calc(100vh * 16 / 9);
-    max-height: calc(100vw * 9 / 16);
-    aspect-ratio: auto;
-    background: #000;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -854,6 +837,25 @@ a {
     position: static;
     top: auto;
     display: none;
+  }
+
+  .game-frame:fullscreen,
+  .game-frame:-webkit-full-screen {
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  .game-frame:fullscreen iframe,
+  .game-frame:-webkit-full-screen iframe {
+    width: min(100%, calc(100vh * 16 / 9));
+    height: auto;
+    max-height: 100vh;
+    max-width: 100vw;
+    aspect-ratio: 16 / 9;
+    background: #000;
   }
 }
 
@@ -872,6 +874,17 @@ a {
   @media (hover: none) and (pointer: coarse) and (min-width: 721px) {
     .game-media {
       max-width: calc(60svh * 16 / 9);
+    }
+  }
+}
+
+@supports (height: 100svh) {
+  @media (hover: none) and (pointer: coarse) {
+    .game-frame:fullscreen iframe,
+    .game-frame:-webkit-full-screen iframe {
+      width: min(100%, calc(100svh * 16 / 9));
+      max-height: 100svh;
+      max-width: 100svw;
     }
   }
 }
