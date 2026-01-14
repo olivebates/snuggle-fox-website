@@ -71,7 +71,8 @@
       return;
     }
     const fullscreenElement = getFullscreenElement();
-    if (fullscreenElement !== frameWrap) {
+    const isMobileFullscreen = frameWrap.classList.contains("mobile-fullscreen");
+    if (fullscreenElement !== frameWrap && !isMobileFullscreen) {
       frame.style.removeProperty("width");
       frame.style.removeProperty("height");
       frame.style.removeProperty("transform");
@@ -537,11 +538,19 @@
     if (fullscreenBtn) {
       const frameWrap = card.querySelector(".game-frame");
       const applyFullscreenSizingForCard = () => applyFullscreenSizing(frameWrap, frame);
+      const setMobileFullscreen = (enabled) => {
+        if (!frameWrap) {
+          return;
+        }
+        frameWrap.classList.toggle("mobile-fullscreen", enabled);
+        document.body.classList.toggle("mobile-fullscreen", enabled);
+        applyFullscreenSizingForCard();
+      };
       const updateFullscreenUi = () => {
         if (!frameWrap) {
           return;
         }
-        const isFullscreen = getFullscreenElement() === frameWrap;
+        const isFullscreen = getFullscreenElement() === frameWrap || frameWrap.classList.contains("mobile-fullscreen");
         fullscreenBtn.textContent = isFullscreen ? "Exit fullscreen" : "Fullscreen";
         fullscreenBtn.setAttribute("aria-label", fullscreenBtn.textContent);
         applyFullscreenSizingForCard();
@@ -556,6 +565,15 @@
 
       fullscreenBtn.addEventListener("click", () => {
         if (!frameWrap) {
+          return;
+        }
+        if (isTouchDevice()) {
+          if (frame && frame.dataset.playing !== "true") {
+            activateGame(slug);
+          }
+          const isActive = frameWrap.classList.contains("mobile-fullscreen");
+          setMobileFullscreen(!isActive);
+          updateFullscreenUi();
           return;
         }
         if (getFullscreenElement() === frameWrap) {

@@ -31,6 +31,10 @@ body {
   min-height: 100vh;
 }
 
+body.mobile-fullscreen {
+  overflow: hidden;
+}
+
 .page {
   max-width: 1120px;
   margin: 0 auto;
@@ -503,6 +507,36 @@ a {
   position: relative;
   min-height: 240px;
   width: 100%;
+}
+
+.game-frame.mobile-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  border-radius: 0;
+  border: 0;
+  margin: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+@supports (height: 100svh) {
+  .game-frame.mobile-fullscreen {
+    height: 100svh;
+  }
+}
+
+.game-frame.mobile-fullscreen iframe {
+  background: #000;
+}
+
+.game-frame.mobile-fullscreen .frame-fullscreen {
+  position: fixed;
+  right: calc(12px + env(safe-area-inset-right));
+  bottom: calc(12px + env(safe-area-inset-bottom));
 }
 
 .game-frame iframe {
