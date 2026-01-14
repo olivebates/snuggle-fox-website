@@ -761,6 +761,21 @@ a {
     padding: 22px;
   }
 
+  .game-media {
+    width: 100%;
+    max-width: calc(60vh * 16 / 9);
+  }
+
+  .game-frame {
+    min-height: 0;
+  }
+
+  @supports (height: 100svh) {
+    .game-media {
+      max-width: calc(60svh * 16 / 9);
+    }
+  }
+
   .game-stats {
     flex-wrap: wrap;
   }
