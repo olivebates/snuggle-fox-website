@@ -832,3 +832,10 @@ a {
     transition: none !important;
   }
 }
+
+@media (hover: none) and (pointer: coarse) {
+  .site-header {
+    position: static;
+    top: auto;
+  }
+}
