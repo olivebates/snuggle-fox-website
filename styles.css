@@ -838,5 +838,6 @@ a {
   .site-header {
     position: static;
     top: auto;
+    display: none;
   }
 }
