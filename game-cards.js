@@ -167,7 +167,7 @@
 
   function renderGameCard(game) {
     const tags = Array.isArray(game.tags) ? game.tags : [];
-    const pagePath = game.pagePath || `game.html?game=${game.slug}`;
+    const pagePath = game.pagePath || `/game/?game=${game.slug}`;
     const buildPath = game.buildPath || `Games/${game.slug}/index.html`;
     let buildUrl = buildPath;
     try {

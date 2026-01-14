@@ -17,7 +17,7 @@
 
   async function loadGame() {
     try {
-      const response = await fetch("games.json", { cache: "no-store" });
+      const response = await fetch("/games.json", { cache: "no-store" });
       if (!response.ok) {
         throw new Error("Unable to load games.json");
       }
@@ -46,7 +46,7 @@
       container.innerHTML = window.GameCards.renderGameCard(game);
       window.GameCards.setupGameCards(container);
     } catch (error) {
-      container.innerHTML = '<div class="notice">Unable to load game data.</div>';
+      container.innerHTML = '<div class="notice">Unable to load game data. Check /games.json.</div>';
       console.error(error);
     }
   }

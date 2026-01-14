@@ -7,7 +7,7 @@
     "controls": "Mouse",
     "updated": "2026-01-13",
     "buildPath": "https://gamejolt.net/?token=T2HDNT3cwZMFhfQCEdfDmG4G7ar4xZ",
-    "pagePath": "game.html?game=fox-game-tower-defence",
+    "pagePath": "/game/?game=fox-game-tower-defence",
     "tileImage": "images/FoxGameTowerDefenceHero.png"
   },
   {
@@ -18,7 +18,7 @@
     "controls": "Mouse + Keyboard",
     "updated": "2025-11-28",
     "buildPath": "https://gamejolt.net/?token=GNQfGBRkvwF2iHV63pzZMo4UzFwUd4",
-    "pagePath": "game.html?game=fox-game-colony-sim-2",
+    "pagePath": "/game/?game=fox-game-colony-sim-2",
     "tileImage": "images/FoxGameColonySimHero.png"
   }
 ]

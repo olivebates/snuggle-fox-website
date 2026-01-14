@@ -3,20 +3,20 @@ Project: SnuggleFox's Games portfolio (static HTML/CSS/JS) with Supabase-backed 
 Purpose
 - Showcase HTML game builds with click-to-play embeds.
 - Track plays, likes, total hours played, and comments via Supabase.
-- Provide a single game template (game.html) that loads by slug so new pages are not required.
+- Provide a single game template (game/index.html) that loads by slug so new pages are not required.
 - Offer a browse tile page and a separate About page.
 
 Key Files
 - index.html: Home page layout, loads games list from games.json.
-- browse.html: Tile-only browse page for quick game selection.
+- browse/index.html: Tile-only browse page for quick game selection.
 - browse.js: Loads games.json, sorts by title, renders browse tiles.
-- about.html: About page content and Discord contact button.
-- game.html: Default game template; loads a game based on ?game=slug.
+- about/index.html: About page content and Discord contact button.
+- game/index.html: Default game template; loads a game based on ?game=slug.
 - styles.css: Global styling (dark warm tan theme + updated fonts).
 - games.json: Single source of truth for games metadata, build paths, page URLs, and tile images.
 - app.js: Loads games.json, sorts by updated date, renders cards on home page.
 - game-cards.js: Renders each game card, handles click-to-play overlays, single active game, plays/ratings/comments.
-- game-page.js: Loads a single game card by slug for game.html.
+- game-page.js: Loads a single game card by slug for game/index.html.
 - supabase-client.js: Supabase URL + anon key config and shared helpers.
 - supabase/schema.sql: Tables + RLS policies for play sessions, ratings, comments.
 
@@ -31,7 +31,7 @@ Adding or Updating a Game
    - slug: URL-safe id (kebab-case)
    - title/description/tags/controls/updated
    - buildPath: "Games/<Folder Name>/index.html" with spaces encoded
-   - pagePath: "game.html?game=<slug>"
+   - pagePath: "/game/?game=<slug>"
    - tileImage: "images/<Image Name>" for browse tiles and play overlay poster (optional)
 
 Click-to-Play Behavior
