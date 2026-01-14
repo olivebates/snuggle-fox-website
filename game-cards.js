@@ -62,6 +62,38 @@
   document.addEventListener("fullscreenchange", handleFullscreenChange);
   document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
 
+  function isTouchDevice() {
+    return window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+  }
+
+  function applyFullscreenSizing(frameWrap, frame) {
+    if (!frameWrap || !frame) {
+      return;
+    }
+    const fullscreenElement = getFullscreenElement();
+    if (fullscreenElement !== frameWrap) {
+      frame.style.removeProperty("width");
+      frame.style.removeProperty("height");
+      return;
+    }
+    if (!isTouchDevice()) {
+      return;
+    }
+
+    let viewportWidth = window.innerWidth;
+    let viewportHeight = window.innerHeight;
+    if (window.visualViewport) {
+      viewportWidth = window.visualViewport.width;
+      viewportHeight = window.visualViewport.height;
+    }
+
+    const aspect = 16 / 9;
+    const targetWidth = Math.min(viewportWidth, viewportHeight * aspect);
+    const targetHeight = targetWidth / aspect;
+    frame.style.width = `${Math.floor(targetWidth)}px`;
+    frame.style.height = `${Math.floor(targetHeight)}px`;
+  }
+
   const activePlays = new Map();
   const cardMap = new Map();
   let activeSlug = null;
@@ -495,6 +527,7 @@
     const fullscreenBtn = card.querySelector(".frame-fullscreen");
     if (fullscreenBtn) {
       const frameWrap = card.querySelector(".game-frame");
+      const applyFullscreenSizingForCard = () => applyFullscreenSizing(frameWrap, frame);
       const updateFullscreenUi = () => {
         if (!frameWrap) {
           return;
@@ -502,10 +535,15 @@
         const isFullscreen = getFullscreenElement() === frameWrap;
         fullscreenBtn.textContent = isFullscreen ? "Exit fullscreen" : "Fullscreen";
         fullscreenBtn.setAttribute("aria-label", fullscreenBtn.textContent);
+        applyFullscreenSizingForCard();
       };
       updateFullscreenUi();
       document.addEventListener("fullscreenchange", updateFullscreenUi);
       document.addEventListener("webkitfullscreenchange", updateFullscreenUi);
+      window.addEventListener("resize", applyFullscreenSizingForCard);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", applyFullscreenSizingForCard);
+      }
 
       fullscreenBtn.addEventListener("click", () => {
         if (!frameWrap) {
