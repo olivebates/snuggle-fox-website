@@ -6,7 +6,7 @@
     "tags": ["Tower defence", "Strategy", "2026"],
     "controls": "Mouse",
     "updated": "2026-01-13",
-    "buildPath": "Games/Fox%20Game%20Tower%20Defence/index.html",
+    "buildPath": "https://gamejolt.net/?token=T2HDNT3cwZMFhfQCEdfDmG4G7ar4xZ",
     "pagePath": "game.html?game=fox-game-tower-defence",
     "tileImage": "images/FoxGameTowerDefenceHero.png"
   },
@@ -17,7 +17,7 @@
     "tags": ["Colony sim", "Management", "2025"],
     "controls": "Mouse + Keyboard",
     "updated": "2025-11-28",
-    "buildPath": "Games/Fox%20Game%20Colony%20Sim%202/index.html",
+    "buildPath": "https://gamejolt.net/?token=GNQfGBRkvwF2iHV63pzZMo4UzFwUd4",
     "pagePath": "game.html?game=fox-game-colony-sim-2",
     "tileImage": "images/FoxGameColonySimHero.png"
   }
