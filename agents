@@ -43,6 +43,14 @@ Supabase Setup
 - Paste the SQL from supabase/schema.sql in Supabase SQL Editor and run it.
 - Set SUPABASE_URL and SUPABASE_ANON_KEY in supabase-client.js.
 
+Hosting
+- Site is hosted on Netlify with a custom domain managed by Cloudflare DNS.
+- Cloudflare DNS uses DNS-only records (no proxy) for Netlify:
+  - A @ -> 75.2.60.5
+  - A @ -> 99.83.190.102
+  - CNAME www -> <site>.netlify.app
+- Netlify should set the primary domain and handle SSL after DNS propagates.
+
 Local Dev
 - games.json is loaded via fetch; the site must be served over http(s), not file://.
 - Use a local web server (python, node, or any static server) when previewing.

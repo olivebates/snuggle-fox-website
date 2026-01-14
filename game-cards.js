@@ -126,11 +126,14 @@
         <span class="stat-label">Plays</span>
         <span class="stat-value" data-stat="plays">--</span>
       </div>
-      <div class="stat">
+      <div class="stat stat-likes">
         <span class="stat-label">Likes</span>
-        <span class="stat-value" data-stat="likes">--</span>
+        <div class="stat-value-row">
+          <span class="stat-value" data-stat="likes">--</span>
+          <button class="rate-btn inline-like" data-rate="1" type="button" aria-label="Like">👍</button>
+        </div>
       </div>
-      <div class="stat">
+      <div class="stat stat-hours">
         <span class="stat-label">Hours played</span>
         <span class="stat-value" data-stat="hours">--</span>
       </div>

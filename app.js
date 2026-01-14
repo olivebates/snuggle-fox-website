@@ -13,7 +13,16 @@
         throw new Error("Unable to load games.json");
       }
       const games = await response.json();
-      games.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+      const featuredSlug = "fox-game-colony-sim-2";
+      games.sort((a, b) => {
+        if (a.slug === featuredSlug && b.slug !== featuredSlug) {
+          return -1;
+        }
+        if (b.slug === featuredSlug && a.slug !== featuredSlug) {
+          return 1;
+        }
+        return new Date(b.updated) - new Date(a.updated);
+      });
       listEl.innerHTML = games.map((game) => window.GameCards.renderGameCard(game)).join("");
       window.GameCards.setupGameCards(listEl);
     } catch (error) {

@@ -89,6 +89,13 @@ a {
   font-size: 0.95rem;
 }
 
+.hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -261,6 +268,27 @@ a {
   display: none;
 }
 
+.page.streamlined .hero {
+  margin-top: 24px;
+  min-height: 58vh;
+  text-align: center;
+  justify-items: center;
+  align-items: center;
+  padding: clamp(56px, 10vh, 140px) 0;
+}
+
+.page.streamlined .hero > div {
+  max-width: 620px;
+}
+
+.page.streamlined .hero .header-actions {
+  justify-content: center;
+}
+
+.page.streamlined .hero .hero-actions {
+  align-items: center;
+}
+
 .page.streamlined #about,
 .page.streamlined #contact,
 .page.streamlined .hero-card {
@@ -343,6 +371,12 @@ a {
   line-height: 1.6;
 }
 
+.page-back {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
 .game-updated {
   font-family: var(--font-display);
   font-size: 0.85rem;
@@ -400,6 +434,21 @@ a {
   font-weight: 600;
 }
 
+.stat-value-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat-likes .stat-value-row {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.inline-like {
+  display: none;
+}
+
 .rating {
   display: flex;
   flex-wrap: wrap;
@@ -419,6 +468,11 @@ a {
   transition: all 0.2s ease;
 }
 
+.rate-btn.inline-like {
+  padding: 6px 12px;
+  font-size: 0.95rem;
+}
+
 .rate-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
@@ -436,8 +490,8 @@ a {
 }
 
 .game-media {
-  width: 960px;
-  max-width: 100%;
+  width: min(960px, 100%);
+  max-width: calc(70vh * 16 / 9);
   justify-self: center;
 }
 
@@ -669,8 +723,68 @@ a {
     flex-wrap: wrap;
   }
 
+  .page {
+    padding: 24px 16px 56px;
+  }
+
+  .section {
+    margin-top: 56px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page.streamlined .hero {
+    min-height: auto;
+    padding: 48px 0 32px;
+  }
+
+  .hero-actions,
+  .hero-actions .header-actions {
+    align-items: stretch;
+  }
+
+  .hero-actions .header-actions {
+    flex-direction: column;
+  }
+
+  .hero-actions .button {
+    width: 100%;
+  }
+
   .game-card {
     padding: 22px;
+  }
+
+  .game-stats {
+    flex-wrap: wrap;
+  }
+
+  .stat-hours {
+    display: none;
+  }
+
+  .rating {
+    display: none;
+  }
+
+  .inline-like {
+    display: inline-flex;
+  }
+
+  .stat {
+    flex: 1 1 140px;
+  }
+
+  .page.home .game-meta p {
+    display: none;
+  }
+
+  .rating {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .game-frame-actions {
@@ -680,6 +794,15 @@ a {
 
   .about-card {
     width: 100%;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
   }
 }
 
