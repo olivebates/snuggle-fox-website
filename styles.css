@@ -511,7 +511,10 @@ a {
 
 .game-frame.mobile-fullscreen {
   position: fixed;
-  inset: 0;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
   z-index: 9999;
   border-radius: 0;
   border: 0;
@@ -521,11 +524,25 @@ a {
   align-items: center;
   justify-content: center;
   padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+.game-frame.mobile-fullscreen.mobile-portrait {
+  width: 100vh;
+  height: 100vw;
+  transform: translate(-50%, -50%) rotate(90deg);
 }
 
 @supports (height: 100svh) {
   .game-frame.mobile-fullscreen {
+    width: 100svw;
     height: 100svh;
+  }
+
+  .game-frame.mobile-fullscreen.mobile-portrait {
+    width: 100svh;
+    height: 100svw;
   }
 }
 

@@ -66,6 +66,37 @@
     return window.matchMedia && window.matchMedia("(hover: none) and (pointer: coarse)").matches;
   }
 
+  function isPortraitOrientation() {
+    return window.matchMedia && window.matchMedia("(orientation: portrait)").matches;
+  }
+
+  function updateMobileOrientationClass(frameWrap) {
+    if (!frameWrap) {
+      return;
+    }
+    frameWrap.classList.toggle("mobile-portrait", isPortraitOrientation());
+  }
+
+  async function lockLandscapeOrientation() {
+    if (screen.orientation && screen.orientation.lock) {
+      try {
+        await screen.orientation.lock("landscape");
+      } catch {
+        // Some browsers require fullscreen or ignore the lock.
+      }
+    }
+  }
+
+  function unlockOrientation() {
+    if (screen.orientation && screen.orientation.unlock) {
+      try {
+        screen.orientation.unlock();
+      } catch {
+        // Ignore unlock errors.
+      }
+    }
+  }
+
   function applyFullscreenSizing(frameWrap, frame) {
     if (!frameWrap || !frame) {
       return;
@@ -82,6 +113,8 @@
     if (!isTouchDevice()) {
       return;
     }
+
+    updateMobileOrientationClass(frameWrap);
 
     let viewportWidth = window.innerWidth;
     let viewportHeight = window.innerHeight;
@@ -543,7 +576,16 @@
           return;
         }
         frameWrap.classList.toggle("mobile-fullscreen", enabled);
+        if (!enabled) {
+          frameWrap.classList.remove("mobile-portrait");
+        }
         document.body.classList.toggle("mobile-fullscreen", enabled);
+        if (enabled) {
+          updateMobileOrientationClass(frameWrap);
+          lockLandscapeOrientation();
+        } else {
+          unlockOrientation();
+        }
         applyFullscreenSizingForCard();
       };
       const updateFullscreenUi = () => {
