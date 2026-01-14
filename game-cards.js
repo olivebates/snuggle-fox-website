@@ -74,6 +74,8 @@
     if (fullscreenElement !== frameWrap) {
       frame.style.removeProperty("width");
       frame.style.removeProperty("height");
+      frame.style.removeProperty("transform");
+      frame.style.removeProperty("transform-origin");
       return;
     }
     if (!isTouchDevice()) {
@@ -87,11 +89,18 @@
       viewportHeight = window.visualViewport.height;
     }
 
-    const aspect = 16 / 9;
-    const targetWidth = Math.min(viewportWidth, viewportHeight * aspect);
-    const targetHeight = targetWidth / aspect;
-    frame.style.width = `${Math.floor(targetWidth)}px`;
-    frame.style.height = `${Math.floor(targetHeight)}px`;
+    const containerWidth = frameWrap.clientWidth || viewportWidth;
+    const containerHeight = frameWrap.clientHeight || viewportHeight;
+    const availableWidth = Math.min(containerWidth, viewportWidth);
+    const availableHeight = Math.min(containerHeight, viewportHeight);
+    const baseWidth = Number(frame.getAttribute("width")) || 960;
+    const baseHeight = Number(frame.getAttribute("height")) || 540;
+    const scale = Math.min(availableWidth / baseWidth, availableHeight / baseHeight);
+
+    frame.style.width = `${baseWidth}px`;
+    frame.style.height = `${baseHeight}px`;
+    frame.style.transform = `scale(${Math.max(scale, 0.1)})`;
+    frame.style.transformOrigin = "center";
   }
 
   const activePlays = new Map();
