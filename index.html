@@ -1,0 +1,101 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SnuggleFox's Portfolio</title>
+    <meta name="description" content="A modern portfolio for HTML games with live play, ratings, and comments.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="page streamlined">
+      <header class="site-header">
+        <a class="brand" href="#top">SnuggleFox's Games</a>
+        <nav class="nav">
+          <a href="browse.html">Browse</a>
+          <a href="about.html">About</a>
+        </nav>
+        <div class="header-actions">
+          <a class="button ghost" href="https://discord.gg/xYxBR3VvZM" target="_blank" rel="noreferrer">Discord</a>
+          <a class="button primary" href="https://ko-fi.com/snugglefox" target="_blank" rel="noreferrer">Donate</a>
+        </div>
+      </header>
+
+      <main id="top">
+        <section class="hero">
+          <div>
+            <h1>SnuggleFox's Portfolio</h1>
+            <p>Here the the games that I've made, I hope you enjoy them!</p>
+            <div class="header-actions">
+              <a class="button primary" href="browse.html">Browse Games</a>
+              <a class="button ghost" href="https://discord.gg/xYxBR3VvZM" target="_blank" rel="noreferrer">Join Discord</a>
+            </div>
+          </div>
+          <div class="hero-card">
+            <h3>Weekly updates</h3>
+            <p>
+              Add new games by dropping an HTML build into a folder and updating a single manifest file.
+            </p>
+          </div>
+        </section>
+
+        <section class="section" id="games">
+          <div class="section-header">
+            <h2>Recently Updated</h2>
+            <span>Most recent updates first</span>
+          </div>
+          <div id="setup-alert" class="setup-alert">
+            Supabase is not configured yet. Add your Supabase URL and anon key to enable plays, ratings, and comments.
+          </div>
+          <div id="games-list" class="game-list"></div>
+        </section>
+
+        <section class="section" id="about">
+          <div class="section-header">
+            <h2>About</h2>
+            <span>Story, tools, and intent</span>
+          </div>
+          <div class="hero-card">
+            <h3>Snugglefox</h3>
+            <p>
+              I build compact HTML games focused on tactile input, clean UX, and quick sessions.
+              Each release ships with a playable embed and honest dev notes.
+            </p>
+          </div>
+        </section>
+
+        <section class="section" id="contact">
+          <div class="section-header">
+            <h2>Contact</h2>
+            <span>Say hi or support the work</span>
+          </div>
+          <div class="hero-card">
+            <p>
+              Join the Discord for updates or drop a donation to keep the games coming.
+            </p>
+            <div class="header-actions">
+              <a class="button ghost" href="https://discord.gg/xYxBR3VvZM" target="_blank" rel="noreferrer">Discord</a>
+              <a class="button primary" href="https://ko-fi.com/snugglefox" target="_blank" rel="noreferrer">Donate</a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>SnuggleFox's Games</span>
+        <div class="footer-links">
+          <a href="https://discord.gg/xYxBR3VvZM" target="_blank" rel="noreferrer">Discord</a>
+          <a href="https://ko-fi.com/snugglefox" target="_blank" rel="noreferrer">Donate</a>
+        </div>
+      </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-client.js"></script>
+    <script src="game-cards.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

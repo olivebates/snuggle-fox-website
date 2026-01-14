@@ -1,0 +1,24 @@
+﻿[
+  {
+    "slug": "fox-game-tower-defence",
+    "title": "Fox Game Tower Defence",
+    "description": "A warm tactical defense game with foxes and cozy maps.",
+    "tags": ["Tower defence", "Strategy", "2026"],
+    "controls": "Mouse",
+    "updated": "2026-01-13",
+    "buildPath": "Games/Fox%20Game%20Tower%20Defence/index.html",
+    "pagePath": "game.html?game=fox-game-tower-defence",
+    "tileImage": "images/FoxGameTowerDefenceHero.png"
+  },
+  {
+    "slug": "fox-game-colony-sim-2",
+    "title": "Fox Game Colony Sim 2",
+    "description": "A colony sim with resource loops, fox workers, and long-form progression.",
+    "tags": ["Colony sim", "Management", "2025"],
+    "controls": "Mouse + Keyboard",
+    "updated": "2025-11-28",
+    "buildPath": "Games/Fox%20Game%20Colony%20Sim%202/index.html",
+    "pagePath": "game.html?game=fox-game-colony-sim-2",
+    "tileImage": "images/FoxGameColonySimHero.png"
+  }
+]
