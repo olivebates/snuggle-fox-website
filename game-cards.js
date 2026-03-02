@@ -168,6 +168,10 @@
   function renderGameCard(game) {
     const tags = Array.isArray(game.tags) ? game.tags : [];
     const pagePath = game.pagePath || `/game/?game=${game.slug}`;
+    const externalUrl = game.externalUrl || "";
+    const isExternal = Boolean(externalUrl);
+    const titleHref = isExternal ? externalUrl : pagePath;
+    const titleTargetAttrs = isExternal ? ' target="_blank" rel="noopener noreferrer"' : "";
     const buildPath = game.buildPath || `Games/${game.slug}/index.html`;
     let buildUrl = buildPath;
     try {
@@ -188,12 +192,21 @@
       ? ` style="--poster-image: url('${escapeHtml(posterUrl)}')"`
       : "";
     const updatedLabel = game.updated ? `Updated ${formatDate(game.updated)}` : "";
+    const externalAction = isExternal
+      ? `<a class="button ghost external-play-link" href="${escapeHtml(externalUrl)}" target="_blank" rel="noopener noreferrer">Play on Newgrounds</a>`
+      : "";
+    const overlayContent = isExternal
+      ? "<span>Play on Newgrounds</span><small>Opens in a new tab</small>"
+      : "<span>Play</span>";
+    const frameButton = isExternal
+      ? ""
+      : '<button class="frame-fullscreen" type="button" aria-label="Fullscreen">Fullscreen</button>';
 
     return `
 <article class="game-card" data-game="${escapeHtml(game.slug)}">
   <div class="game-meta">
     ${updatedLabel ? `<div class="game-updated">${escapeHtml(updatedLabel)}</div>` : ""}
-    <h3><a class="game-title-link" href="${escapeHtml(pagePath)}">${escapeHtml(game.title)}</a></h3>
+    <h3><a class="game-title-link" href="${escapeHtml(titleHref)}"${titleTargetAttrs}>${escapeHtml(game.title)}</a></h3>
     <p>${escapeHtml(game.description)}</p>
     ${tags.length ? `<ul class="chips">${tags.map((tag) => `<li>${escapeHtml(tag)}</li>`).join("")}</ul>` : ""}
     <div class="game-stats">
@@ -223,20 +236,21 @@
     <div class="game-frame"${posterStyle}>
       <iframe
         title="${escapeHtml(game.title)}"
-        data-src="${escapeHtml(buildUrl)}"
+        data-src="${escapeHtml(isExternal ? "about:blank" : buildUrl)}"
         loading="lazy"
         allow="gamepad; pointer-lock; fullscreen 'none'"
         sandbox="allow-scripts allow-same-origin allow-pointer-lock"
         width="960"
         height="540"
       ></iframe>
-      <button class="play-overlay" type="button" aria-label="Click to play">
-        <span>Play</span>
+      <button class="play-overlay" type="button" aria-label="Click to play"${isExternal ? ` data-external-url="${escapeHtml(externalUrl)}"` : ""}>
+        ${overlayContent}
       </button>
-      <button class="frame-fullscreen" type="button" aria-label="Fullscreen">Fullscreen</button>
+      ${frameButton}
     </div>
     <div class="game-frame-actions">
       <span>Controls: ${escapeHtml(game.controls)}</span>
+      ${externalAction}
     </div>
   </div>
   <div class="comment-wrap">
@@ -249,6 +263,13 @@
   </div>
 </article>
 `;
+  }
+
+  function openExternalUrl(url) {
+    if (!url) {
+      return;
+    }
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 
   async function startPlay(slug) {
@@ -558,10 +579,22 @@
 
     const overlay = card.querySelector(".play-overlay");
     if (overlay) {
-      overlay.addEventListener("click", () => activateGame(slug));
+      overlay.addEventListener("click", () => {
+        const externalUrl = overlay.dataset.externalUrl;
+        if (externalUrl) {
+          openExternalUrl(externalUrl);
+          return;
+        }
+        activateGame(slug);
+      });
       overlay.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
+          const externalUrl = overlay.dataset.externalUrl;
+          if (externalUrl) {
+            openExternalUrl(externalUrl);
+            return;
+          }
           activateGame(slug);
         }
       });

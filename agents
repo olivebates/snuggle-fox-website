@@ -21,16 +21,15 @@ Key Files
 - supabase/schema.sql: Tables + RLS policies for play sessions, ratings, comments.
 
 Game Builds
-- Live builds are stored under the `Games/` folder.
-- Each build must have an index.html that is referenced by games.json.
-- buildPath entries in games.json are URL-encoded (spaces as %20).
+- Live builds are hosted on itch.io as embed uploads.
+- buildPath entries in games.json point to the itch.io embed-upload URL.
 
 Adding or Updating a Game
-1) Drop the build into `Games/<Your Game Folder>/index.html`.
+1) Upload the HTML5 build to itch.io (embed upload).
 2) Add/update the entry in games.json:
    - slug: URL-safe id (kebab-case)
    - title/description/tags/controls/updated
-   - buildPath: "Games/<Folder Name>/index.html" with spaces encoded
+   - buildPath: itch.io embed-upload URL
    - pagePath: "/game/?game=<slug>"
    - tileImage: "images/<Image Name>" for browse tiles and play overlay poster (optional)
 
@@ -44,12 +43,9 @@ Supabase Setup
 - Set SUPABASE_URL and SUPABASE_ANON_KEY in supabase-client.js.
 
 Hosting
-- Site is hosted on Netlify with a custom domain managed by Cloudflare DNS.
-- Cloudflare DNS uses DNS-only records (no proxy) for Netlify:
-  - A @ -> 75.2.60.5
-  - A @ -> 99.83.190.102
-  - CNAME www -> <site>.netlify.app
-- Netlify should set the primary domain and handle SSL after DNS propagates.
+- Site is hosted on GitHub Pages with a custom domain managed by Cloudflare DNS.
+- Cloudflare DNS should use DNS-only records (no proxy) for GitHub Pages.
+- GitHub Pages handles SSL after DNS propagates.
 
 Local Dev
 - games.json is loaded via fetch; the site must be served over http(s), not file://.

@@ -20,5 +20,17 @@
     "buildPath": "https://itch.io/embed-upload/15601874?color=333333",
     "pagePath": "/game/?game=fox-game-colony-sim-2",
     "tileImage": "images/FoxGameColonySimHero.png"
+  },
+  {
+    "slug": "horseland-jumper",
+    "title": "Horseland: Jumper",
+    "description": "A hardcore platformer for horse enthusiasts.",
+    "tags": ["Platformer", "Hardcore", "Newgrounds"],
+    "controls": "Keyboard",
+    "updated": "2026-03-02",
+    "buildPath": "https://www.newgrounds.com/portal/view/1021721",
+    "externalUrl": "https://www.newgrounds.com/portal/view/1021721",
+    "pagePath": "/game/?game=horseland-jumper",
+    "tileImage": "https://picon.ngfiles.com/1021000/flash_1021721_card_fallback.jpg?f1772426009"
   }
 ]

@@ -646,6 +646,11 @@ a {
   font-weight: 600;
 }
 
+.game-frame-actions .external-play-link {
+  color: var(--ink);
+  font-weight: 600;
+}
+
 .comment-wrap {
   grid-column: 1 / -1;
   background: rgba(36, 27, 20, 0.7);
