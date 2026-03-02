@@ -190,7 +190,32 @@
     });
   }
 
-  function renderGameCard(game) {
+  function getGameTitleLines(game, fallback = "") {
+    if (Array.isArray(game?.title)) {
+      return game.title.map((part) => String(part ?? "").trim()).filter(Boolean);
+    }
+    const mainTitle = String(game?.title ?? fallback).trim();
+    const subtitle = String(game?.subtitle ?? "").trim();
+    return [mainTitle, subtitle].filter(Boolean);
+  }
+
+  function getGameTitleText(game, fallback = "") {
+    return getGameTitleLines(game, fallback).join(" ");
+  }
+
+  function renderGameCard(game, options = {}) {
+    const titleParts = getGameTitleLines(game, game.slug);
+    const [mainTitle = "", subtitle = ""] = titleParts;
+    const inlineTitle = Boolean(options.inlineTitle);
+    const titleClass = inlineTitle ? "game-title-link title-inline" : "game-title-link";
+    const titleText = titleParts.join(" ");
+    const titleLines = inlineTitle
+      ? `<span class="game-title-line">${escapeHtml(mainTitle)}</span>${
+          subtitle ? ` <span class="game-title-line game-title-subtitle">${escapeHtml(subtitle)}</span>` : ""
+        }`
+      : `<span class="game-title-line">${escapeHtml(mainTitle)}</span>${
+          subtitle ? `<br><span class="game-title-line game-title-subtitle">${escapeHtml(subtitle)}</span>` : ""
+        }`;
     const tags = Array.isArray(game.tags) ? game.tags : [];
     const pagePath = game.pagePath || `/game/?game=${game.slug}`;
     const externalUrl = game.externalUrl || "";
@@ -230,7 +255,7 @@
     return `
 <article class="game-card" data-game="${escapeHtml(game.slug)}">
   <div class="game-meta">
-    <h3><a class="game-title-link" href="${escapeHtml(titleHref)}"${titleTargetAttrs}>${escapeHtml(game.title)}</a></h3>
+    <h3><a class="${titleClass}" href="${escapeHtml(titleHref)}"${titleTargetAttrs}>${titleLines}</a></h3>
     ${metaLabel ? `<div class="game-updated">${escapeHtml(metaLabel)}</div>` : ""}
     <p>${escapeHtml(game.description)}</p>
     ${tags.length ? `<ul class="chips">${tags.map((tag) => `<li>${escapeHtml(tag)}</li>`).join("")}</ul>` : ""}
@@ -260,7 +285,7 @@
   <div class="game-media">
     <div class="game-frame"${posterStyle}>
       <iframe
-        title="${escapeHtml(game.title)}"
+        title="${escapeHtml(titleText)}"
         data-src="${escapeHtml(isExternal ? "about:blank" : buildUrl)}"
         loading="lazy"
         allow="gamepad; pointer-lock; fullscreen 'none'"
@@ -722,6 +747,8 @@
     finalizePlays,
     formatDate,
     formatMonthYear,
+    getGameTitleLines,
+    getGameTitleText,
     escapeHtml
   };
 })();

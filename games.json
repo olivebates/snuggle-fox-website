@@ -1,7 +1,8 @@
 ﻿[
   {
     "slug": "fox-game-tower-defence",
-    "title": "Fox Game: Tower Defence [Prototype]",
+    "title": "Fox Game: Tower Defence",
+    "subtitle": "[Prototype]",
     "description": "A snug, tactical defense romp with foxes and cozy woodland critters.",
     "tags": ["Tower defence", "Strategy", "2026"],
     "controls": "Mouse",
@@ -14,6 +15,7 @@
   {
     "slug": "fox-game-colony-sim-2",
     "title": "Fox Game: Colony Sim 2",
+    "subtitle": "",
     "description": "A colony sim with resource loops, fox workers, and long-form progression.",
     "tags": ["Colony sim", "Management", "2025"],
     "controls": "Mouse + Keyboard",
@@ -26,6 +28,7 @@
   {
     "slug": "horseland-jumper",
     "title": "Horseland: Jumper",
+    "subtitle": "",
     "description": "A hardcore platformer for horse enthusiasts.",
     "tags": ["Platformer", "Hardcore", "Newgrounds"],
     "controls": "Keyboard",

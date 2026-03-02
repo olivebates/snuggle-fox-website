@@ -1,3 +1,6 @@
 Run cmd from folder
 Command: py -m http.server 8000
 URL: http://localhost:8000/
+
+
+Upload to GitHub to update website

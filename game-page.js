@@ -33,7 +33,7 @@
       const updatedEl = document.getElementById("game-updated");
 
       if (titleEl) {
-        titleEl.textContent = game.title;
+        titleEl.textContent = window.GameCards.getGameTitleText(game, game.slug);
       }
       if (subtitleEl) {
         subtitleEl.textContent = game.description;
@@ -41,9 +41,10 @@
       if (updatedEl) {
         updatedEl.textContent = game.published ? window.GameCards.formatMonthYear(game.published) : "";
       }
-      document.title = `${game.title} - SnuggleFox's Games`;
+      const normalizedTitle = window.GameCards.getGameTitleText(game, game.slug);
+      document.title = `${normalizedTitle} - SnuggleFox's Games`;
 
-      container.innerHTML = window.GameCards.renderGameCard(game);
+      container.innerHTML = window.GameCards.renderGameCard(game, { inlineTitle: true });
       window.GameCards.setupGameCards(container);
     } catch (error) {
       container.innerHTML = '<div class="notice">Unable to load game data. Check /games.json.</div>';

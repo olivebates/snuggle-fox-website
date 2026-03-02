@@ -4,6 +4,18 @@
     return;
   }
 
+  function getTitleText(game) {
+    const title = String(game.title || game.slug || "").trim();
+    const subtitle = String(game.subtitle || "").trim();
+    return [title, subtitle].filter(Boolean).join(" ");
+  }
+
+  function getTitleParts(game) {
+    const title = String(game.title || game.slug || "").trim();
+    const subtitle = String(game.subtitle || "").trim();
+    return { title, subtitle };
+  }
+
   async function loadBrowse() {
     try {
       const response = await fetch("/games.json", { cache: "no-store" });
@@ -12,14 +24,24 @@
       }
       const games = await response.json();
       games.sort((a, b) =>
-        String(a.title || "").localeCompare(String(b.title || ""), undefined, { sensitivity: "base" })
+        getTitleText(a).localeCompare(getTitleText(b), undefined, { sensitivity: "base" })
       );
 
       listEl.innerHTML = "";
       games.forEach((game) => {
         const link = document.createElement("a");
         link.className = "browse-tile";
-        link.textContent = game.title || game.slug;
+        const { title, subtitle } = getTitleParts(game);
+        const titleEl = document.createElement("span");
+        titleEl.className = "browse-title-line";
+        titleEl.textContent = title;
+        link.appendChild(titleEl);
+        if (subtitle) {
+          const subtitleEl = document.createElement("span");
+          subtitleEl.className = "browse-title-line browse-title-subtitle";
+          subtitleEl.textContent = subtitle;
+          link.appendChild(subtitleEl);
+        }
         link.href = game.pagePath || `/game/?game=${encodeURIComponent(game.slug || "")}`;
         const tileImage = game.tileImage || game.browseImage;
         if (tileImage) {
