@@ -165,6 +165,31 @@
     });
   }
 
+  function formatMonthYear(value) {
+    if (!value) {
+      return "";
+    }
+
+    const monthYearMatch = String(value).match(/^(\d{4})-(\d{2})$/);
+    let date;
+    if (monthYearMatch) {
+      const year = Number(monthYearMatch[1]);
+      const monthIndex = Number(monthYearMatch[2]) - 1;
+      date = new Date(year, monthIndex, 1);
+    } else {
+      date = new Date(value);
+    }
+
+    if (Number.isNaN(date.getTime())) {
+      return String(value);
+    }
+
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short"
+    });
+  }
+
   function renderGameCard(game) {
     const tags = Array.isArray(game.tags) ? game.tags : [];
     const pagePath = game.pagePath || `/game/?game=${game.slug}`;
@@ -191,7 +216,7 @@
     const posterStyle = posterUrl
       ? ` style="--poster-image: url('${escapeHtml(posterUrl)}')"`
       : "";
-    const updatedLabel = game.updated ? `Updated ${formatDate(game.updated)}` : "";
+    const metaLabel = game.published ? formatMonthYear(game.published) : "";
     const externalAction = isExternal
       ? `<a class="button ghost external-play-link" href="${escapeHtml(externalUrl)}" target="_blank" rel="noopener noreferrer">Play on Newgrounds</a>`
       : "";
@@ -205,8 +230,8 @@
     return `
 <article class="game-card" data-game="${escapeHtml(game.slug)}">
   <div class="game-meta">
-    ${updatedLabel ? `<div class="game-updated">${escapeHtml(updatedLabel)}</div>` : ""}
     <h3><a class="game-title-link" href="${escapeHtml(titleHref)}"${titleTargetAttrs}>${escapeHtml(game.title)}</a></h3>
+    ${metaLabel ? `<div class="game-updated">${escapeHtml(metaLabel)}</div>` : ""}
     <p>${escapeHtml(game.description)}</p>
     ${tags.length ? `<ul class="chips">${tags.map((tag) => `<li>${escapeHtml(tag)}</li>`).join("")}</ul>` : ""}
     <div class="game-stats">
@@ -696,6 +721,7 @@
     setupGameCards,
     finalizePlays,
     formatDate,
+    formatMonthYear,
     escapeHtml
   };
 })();

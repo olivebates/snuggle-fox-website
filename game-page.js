@@ -39,7 +39,7 @@
         subtitleEl.textContent = game.description;
       }
       if (updatedEl) {
-        updatedEl.textContent = game.updated ? `Updated ${window.GameCards.formatDate(game.updated)}` : "";
+        updatedEl.textContent = game.published ? window.GameCards.formatMonthYear(game.published) : "";
       }
       document.title = `${game.title} - SnuggleFox's Games`;
 
