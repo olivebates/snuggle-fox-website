@@ -28,9 +28,8 @@
     "tags": ["Platformer", "Hardcore", "Newgrounds"],
     "controls": "Keyboard",
     "updated": "2026-03-02",
-    "buildPath": "https://www.newgrounds.com/portal/view/1021721",
-    "externalUrl": "https://www.newgrounds.com/portal/view/1021721",
+    "buildPath": "https://itch.io/embed-upload/16666203?color=333333",
     "pagePath": "/game/?game=horseland-jumper",
-    "tileImage": "https://picon.ngfiles.com/1021000/flash_1021721_card_fallback.jpg?f1772426009"
+    "tileImage": "images/Horseland.jpg"
   }
 ]
