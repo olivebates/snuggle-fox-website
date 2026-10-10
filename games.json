@@ -24,5 +24,18 @@
     "buildPath": "https://itch.io/embed-upload/16666203?color=333333",
     "pagePath": "/game/?game=horseland-jumper",
     "tileImage": "images/Horseland.jpg"
+  },
+  {
+    "slug": "hearthline",
+    "title": "Hearthline",
+    "subtitle": "[Puzzle]",
+    "description": "A puzzle game.",
+    "tags": ["Puzzle"],
+    "controls": "See in-game instructions",
+    "published": "2026-10",
+    "updated": "2026-10-10",
+    "buildPath": "https://itch.io/embed-upload/19668290?color=333333",
+    "pagePath": "/game/?game=hearthline",
+    "tileImage": "images/Hearthline.jpg"
   }
 ]
