@@ -44,7 +44,7 @@
       const normalizedTitle = window.GameCards.getGameTitleText(game, game.slug);
       document.title = `${normalizedTitle} - SnuggleFox's Games`;
 
-      container.innerHTML = window.GameCards.renderGameCard(game, { inlineTitle: true });
+      container.innerHTML = window.GameCards.renderGameCard(game);
       window.GameCards.setupGameCards(container);
     } catch (error) {
       container.innerHTML = '<div class="notice">Unable to load game data. Check /games.json.</div>';

@@ -203,19 +203,13 @@
     return getGameTitleLines(game, fallback).join(" ");
   }
 
-  function renderGameCard(game, options = {}) {
+  function renderGameCard(game) {
     const titleParts = getGameTitleLines(game, game.slug);
     const [mainTitle = "", subtitle = ""] = titleParts;
-    const inlineTitle = Boolean(options.inlineTitle);
-    const titleClass = inlineTitle ? "game-title-link title-inline" : "game-title-link";
     const titleText = titleParts.join(" ");
-    const titleLines = inlineTitle
-      ? `<span class="game-title-line">${escapeHtml(mainTitle)}</span>${
-          subtitle ? ` <span class="game-title-line game-title-subtitle">${escapeHtml(subtitle)}</span>` : ""
-        }`
-      : `<span class="game-title-line">${escapeHtml(mainTitle)}</span>${
-          subtitle ? `<br><span class="game-title-line game-title-subtitle">${escapeHtml(subtitle)}</span>` : ""
-        }`;
+    const titleLines = `<span class="game-title-line">${escapeHtml(mainTitle)}</span>${
+      subtitle ? `<span class="game-title-line game-title-subtitle">${escapeHtml(subtitle)}</span>` : ""
+    }`;
     const tags = Array.isArray(game.tags) ? game.tags : [];
     const pagePath = game.pagePath || `/game/?game=${game.slug}`;
     const externalUrl = game.externalUrl || "";
@@ -255,7 +249,7 @@
     return `
 <article class="game-card" data-game="${escapeHtml(game.slug)}">
   <div class="game-meta">
-    <h3><a class="${titleClass}" href="${escapeHtml(titleHref)}"${titleTargetAttrs}>${titleLines}</a></h3>
+    <h3><a class="game-title-link" href="${escapeHtml(titleHref)}"${titleTargetAttrs}>${titleLines}</a></h3>
     ${metaLabel ? `<div class="game-updated">${escapeHtml(metaLabel)}</div>` : ""}
     ${tags.length ? `<ul class="chips">${tags.map((tag) => `<li>${escapeHtml(tag)}</li>`).join("")}</ul>` : ""}
     <div class="game-stats">
@@ -292,7 +286,7 @@
   </div>
   <div class="game-community">
     <p>${escapeHtml(game.description)}</p>
-    <a class="button primary" href="https://discord.gg/HENeTkyRPS" target="_blank" rel="noopener noreferrer">Give feedback on our Discord Community</a>
+    <a class="button primary" href="https://discord.gg/HENeTkyRPS" target="_blank" rel="noopener noreferrer">Give feedback on Discord Community</a>
   </div>
 </article>
 `;
