@@ -13,7 +13,7 @@
         throw new Error("Unable to load games.json");
       }
       const games = await response.json();
-      const featuredSlug = "fox-game-colony-sim-2";
+      const featuredSlug = "fox-game-1";
       games.sort((a, b) => {
         if (a.slug === featuredSlug && b.slug !== featuredSlug) {
           return -1;

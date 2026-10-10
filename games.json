@@ -1,16 +1,11 @@
 ﻿[
   {
-    "slug": "fox-game-tower-defence",
-    "title": "Fox Game: Tower Defence",
-    "subtitle": "[Prototype]",
-    "description": "A snug, tactical defense romp with foxes and cozy woodland critters.",
-    "tags": ["Tower defence", "Strategy", "2026"],
-    "controls": "Mouse",
-    "published": "2026-01",
-    "updated": "2026-01-13",
-    "buildPath": "https://itch.io/embed-upload/16124824?color=333333",
-    "pagePath": "/game/?game=fox-game-tower-defence",
-    "tileImage": "images/FoxGameTowerDefenceHero.png"
+    "slug": "fox-game-1",
+    "title": "Fox Game 1",
+    "description": "",
+    "controls": "See in-game instructions",
+    "buildPath": "https://itch.io/embed-upload/10729646?color=333333",
+    "pagePath": "/game/?game=fox-game-1"
   },
   {
     "slug": "fox-game-colony-sim-2",

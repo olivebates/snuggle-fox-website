@@ -264,22 +264,10 @@
         <span class="stat-label">Plays</span>
         <span class="stat-value" data-stat="plays">--</span>
       </div>
-      <div class="stat stat-likes">
-        <span class="stat-label">Likes</span>
-        <div class="stat-value-row">
-          <span class="stat-value" data-stat="likes">--</span>
-          <button class="rate-btn inline-like" data-rate="1" type="button" aria-label="Like">👍</button>
-        </div>
-      </div>
       <div class="stat stat-hours">
         <span class="stat-label">Hours played</span>
         <span class="stat-value" data-stat="hours">--</span>
       </div>
-    </div>
-    <div class="rating">
-      <button class="rate-btn" data-rate="1" type="button" aria-label="Like">👍</button>
-      <button class="rate-btn" data-rate="-1" type="button" aria-label="Dislike">👎</button>
-      <span class="rating-note" data-rate-note>Rate this game</span>
     </div>
   </div>
   <div class="game-media">
@@ -303,13 +291,9 @@
       ${externalAction}
     </div>
   </div>
-  <div class="comment-wrap">
-    <form class="comment-form" data-comment-form>
-      <input type="text" name="name" placeholder="Name (optional)" maxlength="40">
-      <textarea name="comment" placeholder="Write a short comment" maxlength="500" required></textarea>
-      <button class="button primary" type="submit">Post comment</button>
-    </form>
-    <div class="comment-list" data-comment-list></div>
+  <div class="game-community">
+    <p>Please join our Discord Community!</p>
+    <a href="https://discord.gg/HENeTkyRPS" target="_blank" rel="noopener noreferrer">https://discord.gg/HENeTkyRPS</a>
   </div>
 </article>
 `;
@@ -393,170 +377,23 @@
       .select("id", { count: "exact", head: true })
       .eq("game_slug", slug);
 
-    const likesQuery = supabase
-      .from("ratings")
-      .select("id", { count: "exact", head: true })
-      .eq("game_slug", slug)
-      .eq("value", 1);
-
     const durationQuery = supabase
       .from("play_sessions")
       .select("duration_ms")
       .eq("game_slug", slug)
       .not("duration_ms", "is", null);
 
-    const [playsResult, likesResult, durationResult] = await Promise.all([
+    const [playsResult, durationResult] = await Promise.all([
       playsQuery,
-      likesQuery,
       durationQuery
     ]);
 
     const playsValue = playsResult.count ?? 0;
-    const likesValue = likesResult.count ?? 0;
     const durations = durationResult.data || [];
     const totalDuration = durations.reduce((sum, row) => sum + (row.duration_ms || 0), 0);
 
     card.querySelector('[data-stat="plays"]').textContent = playsValue;
-    card.querySelector('[data-stat="likes"]').textContent = likesValue;
     card.querySelector('[data-stat="hours"]').textContent = formatHours(totalDuration);
-  }
-
-  async function refreshUserRating(slug) {
-    if (!supabase) {
-      return;
-    }
-
-    const { data } = await supabase
-      .from("ratings")
-      .select("value")
-      .eq("game_slug", slug)
-      .eq("client_id", clientId)
-      .maybeSingle();
-
-    if (data) {
-      setRatingUi(slug, data.value);
-    }
-  }
-
-  function setRatingUi(slug, value) {
-    const card = cardMap.get(slug);
-    if (!card) {
-      return;
-    }
-    const buttons = card.querySelectorAll(".rate-btn");
-    buttons.forEach((btn) => {
-      btn.classList.toggle("active", Number(btn.dataset.rate) === value);
-    });
-    const note = card.querySelector("[data-rate-note]");
-    if (note) {
-      note.textContent = value === 1 ? "Thanks for the like" : "Thanks for the feedback";
-    }
-  }
-
-  async function submitRating(slug, value) {
-    if (!supabase) {
-      return;
-    }
-    const { error } = await supabase
-      .from("ratings")
-      .upsert(
-        {
-          game_slug: slug,
-          client_id: clientId,
-          value: value
-        },
-        { onConflict: "game_slug,client_id" }
-      );
-
-    if (error) {
-      console.error("Rating failed", error);
-      return;
-    }
-
-    setRatingUi(slug, value);
-    refreshStats(slug);
-  }
-
-  async function loadComments(slug) {
-    if (!supabase) {
-      return;
-    }
-    const card = cardMap.get(slug);
-    if (!card) {
-      return;
-    }
-    const list = card.querySelector("[data-comment-list]");
-    list.innerHTML = "";
-
-    const { data, error } = await supabase
-      .from("comments")
-      .select("display_name, body, created_at")
-      .eq("game_slug", slug)
-      .order("created_at", { ascending: false })
-      .limit(25);
-
-    if (error) {
-      console.error("Comments load failed", error);
-      return;
-    }
-
-    if (!data || data.length === 0) {
-      const empty = document.createElement("div");
-      empty.className = "comment";
-      empty.textContent = "No comments yet. Be the first to say hi.";
-      list.appendChild(empty);
-      return;
-    }
-
-    data.forEach((comment) => {
-      const item = document.createElement("div");
-      item.className = "comment";
-
-      const header = document.createElement("div");
-      header.className = "comment-header";
-      const name = document.createElement("span");
-      name.textContent = comment.display_name || "Anonymous";
-      const date = document.createElement("span");
-      const created = new Date(comment.created_at);
-      date.textContent = created.toLocaleDateString();
-      header.appendChild(name);
-      header.appendChild(date);
-
-      const body = document.createElement("p");
-      body.className = "comment-body";
-      body.textContent = comment.body;
-
-      item.appendChild(header);
-      item.appendChild(body);
-      list.appendChild(item);
-    });
-  }
-
-  async function submitComment(slug, form) {
-    if (!supabase) {
-      return;
-    }
-    const formData = new FormData(form);
-    const name = String(formData.get("name") || "").trim();
-    const comment = String(formData.get("comment") || "").trim();
-    if (!comment) {
-      return;
-    }
-
-    const { error } = await supabase.from("comments").insert({
-      game_slug: slug,
-      client_id: clientId,
-      display_name: name || null,
-      body: comment
-    });
-
-    if (error) {
-      console.error("Comment failed", error);
-      return;
-    }
-
-    form.reset();
-    loadComments(slug);
   }
 
   function activateGame(slug) {
@@ -714,26 +551,8 @@
       });
     }
 
-    const rateButtons = card.querySelectorAll(".rate-btn");
-    rateButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const value = Number(btn.dataset.rate);
-        submitRating(slug, value);
-      });
-    });
-
-    const form = card.querySelector("[data-comment-form]");
-    if (form) {
-      form.addEventListener("submit", (event) => {
-        event.preventDefault();
-        submitComment(slug, form);
-      });
-    }
-
     if (supabase) {
       refreshStats(slug);
-      refreshUserRating(slug);
-      loadComments(slug);
     }
   }
 
