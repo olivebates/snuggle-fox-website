@@ -1,16 +1,8 @@
 ﻿[
   {
-    "slug": "fox-game-1",
-    "title": "Fox Game 1",
-    "description": "",
-    "controls": "See in-game instructions",
-    "buildPath": "https://itch.io/embed-upload/10729646?color=333333",
-    "pagePath": "/game/?game=fox-game-1"
-  },
-  {
     "slug": "fox-game-colony-sim-2",
-    "title": "Fox Game: Colony Sim 2",
-    "subtitle": "",
+    "title": "Fox Game",
+    "subtitle": "[Colony Sim]",
     "description": "A colony sim with resource loops, fox workers, and long-form progression.",
     "tags": ["Colony sim", "Management", "2025"],
     "controls": "Mouse + Keyboard",
@@ -22,8 +14,8 @@
   },
   {
     "slug": "horseland-jumper",
-    "title": "Horseland: Jumper",
-    "subtitle": "",
+    "title": "Horseland",
+    "subtitle": "[Precision Jumper]",
     "description": "A hardcore platformer for horse enthusiasts.",
     "tags": ["Platformer", "Hardcore", "Newgrounds"],
     "controls": "Keyboard",

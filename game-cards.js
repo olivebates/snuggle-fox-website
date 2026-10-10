@@ -257,7 +257,6 @@
   <div class="game-meta">
     <h3><a class="${titleClass}" href="${escapeHtml(titleHref)}"${titleTargetAttrs}>${titleLines}</a></h3>
     ${metaLabel ? `<div class="game-updated">${escapeHtml(metaLabel)}</div>` : ""}
-    <p>${escapeHtml(game.description)}</p>
     ${tags.length ? `<ul class="chips">${tags.map((tag) => `<li>${escapeHtml(tag)}</li>`).join("")}</ul>` : ""}
     <div class="game-stats">
       <div class="stat">
@@ -292,8 +291,8 @@
     </div>
   </div>
   <div class="game-community">
-    <p>Please join our Discord Community!</p>
-    <a href="https://discord.gg/HENeTkyRPS" target="_blank" rel="noopener noreferrer">https://discord.gg/HENeTkyRPS</a>
+    <p>${escapeHtml(game.description)}</p>
+    <a class="button primary" href="https://discord.gg/HENeTkyRPS" target="_blank" rel="noopener noreferrer">Give feedback on our Discord Community</a>
   </div>
 </article>
 `;

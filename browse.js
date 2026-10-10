@@ -23,15 +23,9 @@
         throw new Error("Unable to load games.json");
       }
       const games = await response.json();
-      games.sort((a, b) => {
-        if (a.slug === "fox-game-1" && b.slug !== "fox-game-1") {
-          return -1;
-        }
-        if (b.slug === "fox-game-1" && a.slug !== "fox-game-1") {
-          return 1;
-        }
-        return getTitleText(a).localeCompare(getTitleText(b), undefined, { sensitivity: "base" });
-      });
+      games.sort((a, b) =>
+        getTitleText(a).localeCompare(getTitleText(b), undefined, { sensitivity: "base" })
+      );
 
       listEl.innerHTML = "";
       games.forEach((game) => {
