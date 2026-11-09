@@ -36,7 +36,7 @@ Adding or Updating a Game
 Click-to-Play Behavior
 - The iframe uses data-src until clicked; clicking loads the build and starts play tracking.
 - Only one game can be active at a time; activating a new game unloads the previous iframe and finalizes playtime.
-- Fullscreen is only allowed via the explicit Fullscreen button; the iframe sandbox blocks auto fullscreen.
+- Clicking Play loads the game and requests fullscreen (or the existing mobile fullscreen view on touch devices). The Fullscreen button also toggles this view; iframe-initiated fullscreen remains blocked.
 
 Supabase Setup
 - Paste the SQL from supabase/schema.sql in Supabase SQL Editor and run it.

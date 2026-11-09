@@ -15,13 +15,20 @@
     return document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
   }
 
-  function requestFullscreen(element) {
-    if (element.requestFullscreen) {
-      element.requestFullscreen();
-    } else if (element.webkitRequestFullscreen) {
-      element.webkitRequestFullscreen();
-    } else if (element.msRequestFullscreen) {
-      element.msRequestFullscreen();
+  async function requestFullscreen(element) {
+    try {
+      if (element.requestFullscreen) {
+        await element.requestFullscreen();
+      } else if (element.webkitRequestFullscreen) {
+        await element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) {
+        await element.msRequestFullscreen();
+      }
+    } catch {
+      // Keep the game playable inline if the browser declines fullscreen.
+      if (fullscreenIntent === element) {
+        fullscreenIntent = null;
+      }
     }
   }
 
@@ -457,6 +464,7 @@
       });
     }
 
+    let enterFullscreen = () => {};
     const overlay = card.querySelector(".play-overlay");
     if (overlay) {
       overlay.addEventListener("click", () => {
@@ -466,6 +474,7 @@
           return;
         }
         activateGame(slug);
+        enterFullscreen();
       });
       overlay.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -476,6 +485,7 @@
             return;
           }
           activateGame(slug);
+          enterFullscreen();
         }
       });
     }
@@ -518,16 +528,28 @@
         window.visualViewport.addEventListener("resize", applyFullscreenSizingForCard);
       }
 
+      enterFullscreen = () => {
+        if (!frameWrap) {
+          return;
+        }
+        if (frame && frame.dataset.playing !== "true") {
+          activateGame(slug);
+        }
+        if (isTouchDevice()) {
+          setMobileFullscreen(true);
+          updateFullscreenUi();
+          return;
+        }
+        fullscreenIntent = frameWrap;
+        requestFullscreen(frameWrap);
+      };
+
       fullscreenBtn.addEventListener("click", () => {
         if (!frameWrap) {
           return;
         }
-        if (isTouchDevice()) {
-          if (frame && frame.dataset.playing !== "true") {
-            activateGame(slug);
-          }
-          const isActive = frameWrap.classList.contains("mobile-fullscreen");
-          setMobileFullscreen(!isActive);
+        if (frameWrap.classList.contains("mobile-fullscreen")) {
+          setMobileFullscreen(false);
           updateFullscreenUi();
           return;
         }
@@ -536,11 +558,7 @@
           exitFullscreen();
           return;
         }
-        if (frame && frame.dataset.playing !== "true") {
-          activateGame(slug);
-        }
-        fullscreenIntent = frameWrap;
-        requestFullscreen(frameWrap);
+        enterFullscreen();
       });
     }
 
