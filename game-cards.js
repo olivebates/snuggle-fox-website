@@ -111,44 +111,29 @@
     const fullscreenElement = getFullscreenElement();
     const isMobileFullscreen = frameWrap.classList.contains("mobile-fullscreen");
     if (fullscreenElement !== frameWrap && !isMobileFullscreen) {
-      frame.style.removeProperty("width");
-      frame.style.removeProperty("height");
-      frame.style.removeProperty("transform");
-      frame.style.removeProperty("transform-origin");
+      frameWrap.style.removeProperty("--fullscreen-game-width");
+      frameWrap.style.removeProperty("--fullscreen-game-height");
+      frameWrap.style.removeProperty("--fullscreen-game-scale");
       return;
+    }
+    if (isTouchDevice()) {
+      updateMobileOrientationClass(frameWrap);
     }
     // Responsive games resize their viewport through CSS instead of scaling a fixed canvas.
     if (frameWrap.classList.contains("responsive")) {
-      if (isTouchDevice()) {
-        updateMobileOrientationClass(frameWrap);
-      }
       return;
     }
-    if (!isTouchDevice()) {
-      return;
-    }
-
-    updateMobileOrientationClass(frameWrap);
-
-    let viewportWidth = window.innerWidth;
-    let viewportHeight = window.innerHeight;
-    if (window.visualViewport) {
-      viewportWidth = window.visualViewport.width;
-      viewportHeight = window.visualViewport.height;
-    }
-
-    const containerWidth = frameWrap.clientWidth || viewportWidth;
-    const containerHeight = frameWrap.clientHeight || viewportHeight;
-    const availableWidth = Math.min(containerWidth, viewportWidth);
-    const availableHeight = Math.min(containerHeight, viewportHeight);
+    // Measure the wrapper so portrait rotation and safe-area padding are accounted for.
+    const style = window.getComputedStyle(frameWrap);
+    const availableWidth = frameWrap.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    const availableHeight = frameWrap.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
     const baseWidth = Number(frame.getAttribute("width")) || 960;
     const baseHeight = Number(frame.getAttribute("height")) || 540;
     const scale = Math.min(availableWidth / baseWidth, availableHeight / baseHeight);
 
-    frame.style.width = `${baseWidth}px`;
-    frame.style.height = `${baseHeight}px`;
-    frame.style.transform = `scale(${Math.max(scale, 0.1)})`;
-    frame.style.transformOrigin = "center";
+    frameWrap.style.setProperty("--fullscreen-game-width", `${baseWidth}px`);
+    frameWrap.style.setProperty("--fullscreen-game-height", `${baseHeight}px`);
+    frameWrap.style.setProperty("--fullscreen-game-scale", Math.max(scale, 0));
   }
 
   const activePlays = new Map();
@@ -237,6 +222,13 @@
     } catch {
       buildUrl = buildPath;
     }
+    let isItchEmbed = false;
+    try {
+      const url = new URL(buildUrl, window.location.href);
+      isItchEmbed = url.hostname === "itch.io" && url.pathname.startsWith("/embed-upload/");
+    } catch {
+      // Local or invalid build paths do not have an itch.io footer.
+    }
     const posterImage = game.posterImage || game.tileImage || game.browseImage;
     let posterUrl = "";
     if (posterImage) {
@@ -279,15 +271,17 @@
   </div>
   <div class="game-media">
     <div class="game-frame${game.responsive === true ? " responsive" : ""}"${posterStyle}>
-      <iframe
-        title="${escapeHtml(titleText)}"
-        data-src="${escapeHtml(isExternal ? "about:blank" : buildUrl)}"
-        loading="lazy"
-        allow="gamepad; pointer-lock; fullscreen 'none'"
-        sandbox="allow-scripts allow-same-origin allow-pointer-lock"
-        width="960"
-        height="540"
-      ></iframe>
+      <div class="game-viewport${isItchEmbed ? " itch-embed" : ""}">
+        <iframe
+          title="${escapeHtml(titleText)}"
+          data-src="${escapeHtml(isExternal ? "about:blank" : buildUrl)}"
+          loading="lazy"
+          allow="gamepad; pointer-lock; fullscreen 'none'"
+          sandbox="allow-scripts allow-same-origin allow-pointer-lock"
+          width="960"
+          height="540"
+        ></iframe>
+      </div>
       <button class="play-overlay" type="button" aria-label="Click to play"${isExternal ? ` data-external-url="${escapeHtml(externalUrl)}"` : ""}>
         ${overlayContent}
       </button>
@@ -523,6 +517,7 @@
           return;
         }
         const isFullscreen = getFullscreenElement() === frameWrap || frameWrap.classList.contains("mobile-fullscreen");
+        frameWrap.classList.toggle("fullscreen-view", isFullscreen);
         fullscreenBtn.textContent = isFullscreen ? "Exit fullscreen" : "Fullscreen";
         fullscreenBtn.setAttribute("aria-label", fullscreenBtn.textContent);
         applyFullscreenSizingForCard();
