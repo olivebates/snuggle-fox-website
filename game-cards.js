@@ -117,6 +117,13 @@
       frame.style.removeProperty("transform-origin");
       return;
     }
+    // Responsive games resize their viewport through CSS instead of scaling a fixed canvas.
+    if (frameWrap.classList.contains("responsive")) {
+      if (isTouchDevice()) {
+        updateMobileOrientationClass(frameWrap);
+      }
+      return;
+    }
     if (!isTouchDevice()) {
       return;
     }
@@ -271,7 +278,7 @@
     </div>
   </div>
   <div class="game-media">
-    <div class="game-frame"${posterStyle}>
+    <div class="game-frame${game.responsive === true ? " responsive" : ""}"${posterStyle}>
       <iframe
         title="${escapeHtml(titleText)}"
         data-src="${escapeHtml(isExternal ? "about:blank" : buildUrl)}"

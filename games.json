@@ -34,7 +34,8 @@
     "controls": "See in-game instructions",
     "published": "2026-10",
     "updated": "2026-10-10",
-    "buildPath": "https://itch.io/embed-upload/20389534?color=333333",
+    "buildPath": "https://itch.io/embed-upload/20389952?color=333333",
+    "responsive": true,
     "pagePath": "/game/?game=hearthline",
     "tileImage": "images/Hearthline.jpg"
   }

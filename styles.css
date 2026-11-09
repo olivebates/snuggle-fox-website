@@ -837,3 +837,13 @@ a {
     }
   }
 }
+
+/* Responsive games use the complete fullscreen viewport on desktop and touch devices. */
+.game-frame.responsive:is(:fullscreen, :-webkit-full-screen, .mobile-fullscreen) iframe {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  aspect-ratio: auto;
+  transform: none;
+}
