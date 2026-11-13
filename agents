@@ -1,8 +1,8 @@
-Project: SnuggleFox's Games portfolio (static HTML/CSS/JS) with Supabase-backed plays, ratings, total hours, and comments.
+Project: SnuggleFox's Games portfolio (static HTML/CSS/JS) with Convex-backed plays and total hours.
 
 Purpose
 - Showcase HTML game builds with click-to-play embeds.
-- Track plays, likes, total hours played, and comments via Supabase.
+- Track plays and total hours played via Convex.
 - Provide a single game template (game/index.html) that loads by slug so new pages are not required.
 - Offer a browse tile page and a separate About page.
 
@@ -15,10 +15,12 @@ Key Files
 - styles.css: Global styling (dark warm tan theme + updated fonts).
 - games.json: Single source of truth for games metadata, build paths, page URLs, and tile images.
 - app.js: Loads games.json, sorts by updated date, renders cards on home page.
-- game-cards.js: Renders each game card, handles click-to-play overlays, single active game, plays/ratings/comments.
+- game-cards.js: Renders each game card, handles click-to-play overlays, a single active game, and Convex play tracking.
 - game-page.js: Loads a single game card by slug for game/index.html.
-- supabase-client.js: Supabase URL + anon key config and shared helpers.
-- supabase/schema.sql: Tables + RLS policies for play sessions, ratings, comments.
+- convex-client.js: Convex cloud URL and HTTP query/mutation helpers.
+- convex/schema.js: Play sessions and aggregate totals per game.
+- convex/plays.js: Idempotent session saves and public totals query.
+- supabase-client.js and supabase/schema.sql: Legacy references; no longer loaded by the pages.
 
 Game Builds
 - Live builds are hosted on itch.io as embed uploads.
@@ -38,9 +40,11 @@ Click-to-Play Behavior
 - Only one game can be active at a time; activating a new game unloads the previous iframe and finalizes playtime.
 - Clicking Play loads the game and requests fullscreen (or the existing mobile fullscreen view on touch devices). The Fullscreen button also toggles this view; iframe-initiated fullscreen remains blocked.
 
-Supabase Setup
-- Paste the SQL from supabase/schema.sql in Supabase SQL Editor and run it.
-- Set SUPABASE_URL and SUPABASE_ANON_KEY in supabase-client.js.
+Convex Setup
+- See README.md for deployment commands and tests.
+- The frontend uses https://animated-curlew-362.convex.cloud, a development deployment.
+- Deploy updates to this URL with CONVEX_DEPLOYMENT=dev:animated-curlew-362 and npx convex dev --once.
+- Sessions save cumulative durations every 30 seconds and on lifecycle events; retries do not add plays or double-count time.
 
 Hosting
 - Site is hosted on GitHub Pages with a custom domain managed by Cloudflare DNS.
@@ -50,10 +54,9 @@ Hosting
 Local Dev
 - games.json is loaded via fetch; the site must be served over http(s), not file://.
 - Use a local web server (python, node, or any static server) when previewing.
-- Update supabase-client.js (note the exact filename) for API keys.
+- Update convex-client.js if switching to a different Convex deployment URL.
 
 Notes
 - The front page orders games by the updated field (newest first).
 - Browse page sorts tiles alphabetically by title.
-- Ratings are per-client via localStorage; likes count only (dislikes are stored but not displayed).
-- Hours played shows total time across play sessions.
+- Hours played shows total time across Convex play sessions. Legacy Supabase totals require a separate import.

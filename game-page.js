@@ -1,10 +1,5 @@
 ﻿(() => {
   const container = document.getElementById("game-container");
-  const alertEl = document.getElementById("setup-alert");
-
-  if (window.SUPABASE_CLIENT) {
-    window.SUPABASE_CLIENT.showSetupAlert(alertEl);
-  }
 
   const slugFromBody = document.body.dataset.gameSlug;
   const slugFromQuery = new URLSearchParams(window.location.search).get("game");

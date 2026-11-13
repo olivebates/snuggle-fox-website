@@ -1,10 +1,5 @@
 ﻿(() => {
   const listEl = document.getElementById("games-list");
-  const alertEl = document.getElementById("setup-alert");
-
-  if (window.SUPABASE_CLIENT) {
-    window.SUPABASE_CLIENT.showSetupAlert(alertEl);
-  }
 
   async function loadGames() {
     try {

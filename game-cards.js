@@ -1,11 +1,9 @@
 ﻿(() => {
-  const supabaseClient = window.SUPABASE_CLIENT || {};
-  const supabase = supabaseClient.supabase || null;
-  const clientId = supabaseClient.clientId || "anonymous";
+  const convex = window.CONVEX_CLIENT;
 
   function formatHours(ms) {
     if (!ms || ms <= 0) {
-      return "--";
+      return "0.00h";
     }
     const hours = ms / 3600000;
     return `${hours.toFixed(2)}h`;
@@ -137,6 +135,7 @@
   }
 
   const activePlays = new Map();
+  const pendingSaves = new Map();
   const cardMap = new Map();
   let activeSlug = null;
 
@@ -307,94 +306,61 @@
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
-  async function startPlay(slug) {
-    if (!supabase) {
-      return;
-    }
+  function startPlay(slug) {
     if (activePlays.has(slug)) {
       return;
     }
 
-    const startedAt = Date.now();
-    const { data, error } = await supabase
-      .from("play_sessions")
-      .insert({
-        game_slug: slug,
-        client_id: clientId,
-        started_at: new Date(startedAt).toISOString()
-      })
-      .select("id")
-      .single();
-
-    if (error) {
-      console.error("Play insert failed", error);
-      return;
-    }
-
-    activePlays.set(slug, { id: data.id, startedAt, ended: false });
-    refreshStats(slug);
+    const play = { sessionId: crypto.randomUUID(), startedAt: Date.now() };
+    activePlays.set(slug, play);
+    savePlay(slug, play);
   }
 
-  async function endPlay(slug) {
-    if (!supabase) {
-      return;
+  function showStatsError(error) {
+    console.error("Convex play statistics failed", error);
+    const alert = document.getElementById("setup-alert");
+    if (alert) {
+      alert.classList.add("visible");
     }
+  }
+
+  async function savePlay(slug, play, durationMs = Math.max(0, Date.now() - play.startedAt)) {
+    const previous = pendingSaves.get(play.sessionId);
+    const snapshot = { slug, play, durationMs: Math.max(previous?.durationMs ?? 0, durationMs) };
+    pendingSaves.set(play.sessionId, snapshot);
+    try {
+      await convex.recordPlay(slug, play.sessionId, snapshot.durationMs);
+      if (pendingSaves.get(play.sessionId) === snapshot) {
+        pendingSaves.delete(play.sessionId);
+      }
+      await refreshStats(slug);
+    } catch (error) {
+      showStatsError(error);
+    }
+  }
+
+  function endPlay(slug) {
     const play = activePlays.get(slug);
-    if (!play || play.ended) {
+    if (!play) {
       return;
     }
-    play.ended = true;
-    const durationMs = Date.now() - play.startedAt;
-
-    const { error } = await supabase
-      .from("play_sessions")
-      .update({
-        ended_at: new Date().toISOString(),
-        duration_ms: durationMs
-      })
-      .eq("id", play.id);
-
-    if (error) {
-      console.error("Play update failed", error);
-      return;
-    }
-
     activePlays.delete(slug);
-    refreshStats(slug);
+    return savePlay(slug, play);
   }
 
   async function refreshStats(slug) {
-    if (!supabase) {
-      return;
-    }
-
     const card = cardMap.get(slug);
     if (!card) {
       return;
     }
 
-    const playsQuery = supabase
-      .from("play_sessions")
-      .select("id", { count: "exact", head: true })
-      .eq("game_slug", slug);
-
-    const durationQuery = supabase
-      .from("play_sessions")
-      .select("duration_ms")
-      .eq("game_slug", slug)
-      .not("duration_ms", "is", null);
-
-    const [playsResult, durationResult] = await Promise.all([
-      playsQuery,
-      durationQuery
-    ]);
-
-    const playsValue = playsResult.count ?? 0;
-    const durations = durationResult.data || [];
-    const totalDuration = durations.reduce((sum, row) => sum + (row.duration_ms || 0), 0);
-
-    card.querySelector('[data-stat="plays"]').textContent = playsValue;
-    card.querySelector('[data-stat="hours"]').textContent = formatHours(totalDuration);
+    try {
+      const totals = await convex.stats(slug);
+      card.querySelector('[data-stat="plays"]').textContent = totals.plays;
+      card.querySelector('[data-stat="hours"]').textContent = formatHours(totals.durationMs);
+    } catch (error) {
+      showStatsError(error);
+    }
   }
 
   function activateGame(slug) {
@@ -442,12 +408,17 @@
   }
 
   async function finalizePlays() {
-    if (!supabase) {
-      return;
-    }
-    const slugs = Array.from(activePlays.keys());
-    await Promise.all(slugs.map((slug) => endPlay(slug)));
+    const stopped = Array.from(pendingSaves.values()).filter(({ slug, play }) =>
+      activePlays.get(slug) !== play);
+    await Promise.all([
+      ...Array.from(activePlays, ([slug, play]) => savePlay(slug, play)),
+      ...stopped.map(({ slug, play, durationMs }) => savePlay(slug, play, durationMs))
+    ]);
   }
+
+  // Checkpoint long sessions and retry temporary network failures. Visibility and
+  // pagehide saves keep the same session so returning to the tab keeps tracking.
+  window.setInterval(finalizePlays, 30000);
 
   function initGameCard(card) {
     const slug = card.dataset.game;
@@ -564,9 +535,7 @@
       });
     }
 
-    if (supabase) {
-      refreshStats(slug);
-    }
+    refreshStats(slug);
   }
 
   function setupGameCards(container) {
