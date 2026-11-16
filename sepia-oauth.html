@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connect to Sepia</title>
+<style>body{background:#211e19;color:#ead4b0;font:18px system-ui;max-width:650px;margin:80px auto;padding:24px}a{color:#eac88f}</style>
+</head><body><h1>Return to Sepia</h1>
+<p id="message">Start connecting an account from Sepia first.</p>
+<a id="back" hidden>Continue to Sepia</a>
+<script>
+// Host this file on your OWN HTTPS website. No analytics or third-party scripts.
+const params = new URLSearchParams(location.search);
+if (params.get('state') && (params.has('code') || params.has('error'))) {
+  const target = 'http://127.0.0.1:43821/oauth/callback' + location.search;
+  const link = document.getElementById('back');
+  link.href = target; link.hidden = false;
+  document.getElementById('message').textContent =
+    'Connecting to the running Sepia app. If your browser blocks this, click Continue. You can also copy this page\'s full address into Sepia\'s Finish connection field. Do not share that address.';
+  location.replace(target);
+}
+</script></body></html>
